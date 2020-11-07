@@ -1,0 +1,33 @@
+{
+  "name": "reactjs-blog",
+  "version": "0.2.0",
+  "private": true,
+  "dependencies": {
+    "prismic-javascript": "^2.0.3",
+    "prismic-reactjs": "^1.0.0",
+    "qs": "^6.7.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-helmet": "^5.2.1",
+    "react-router-dom": "^5.0.1",
+    "whatwg-fetch": "~3.0.0"
+  },
+  "devDependencies": {
+    "react-scripts": "^3.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "engines": {
+    "node": ">=4.8.1",
+    "npm": ">=2.15.11"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
