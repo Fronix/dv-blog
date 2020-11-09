@@ -43,7 +43,7 @@ const Post = ({ match: { params: { uid } } }) => {
             </Helmet>
             <div className='outer-container'>
               <div className='back'>
-                <Link to='/'>back to list</Link>
+                <Link to='/blog/'>back to list</Link>
               </div>
               {/* Render the edit button */}
               <h1 data-wio-id={doc.post.id}>
