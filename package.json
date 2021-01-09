@@ -2,6 +2,7 @@
   "name": "reactjs-blog",
   "version": "0.2.0",
   "private": true,
+  "homepage": "https://darthvader.fronix.se/blog",
   "dependencies": {
     "prismic-javascript": "^2.0.3",
     "prismic-reactjs": "^1.0.0",
