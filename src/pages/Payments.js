@@ -8,7 +8,7 @@ import getMonth from '../utils/date';
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 const Payments = () => {
-  const { data: payments, error, mutate } = useSWR('https://darthvader.fronix.se/payment-api/users', fetcher)
+  const { data: payments, error, mutate } = useSWR('http://localhost:3001/users', fetcher)
   
   const TABLE_HEADER = [
     "Jan", "Feb", "Mar",
@@ -59,7 +59,7 @@ const handleCheckboxChange = async (event, userId, month) => {
       <div className="st_row">
         <div className="st_column _months">Name</div>
         {TABLE_HEADER.map(m => (
-          <div key={m} className="st_column _months">{m}</div>
+          <div key={m} className={`st_column _months ${m === getMonth().substr(0,3) ? 'warning' : ''}`}>{m}</div>
         ))}
       </div>
     </header>
