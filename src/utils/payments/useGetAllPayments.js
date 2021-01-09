@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 
-export const fetchPayments = () => fetch('http://localhost:3001/users')
+export const fetchPayments = () => fetch('https://darthvader.fronix.se/api/payment/users')
 .then(x => x.json())
 .then(result => result,
 (error) => error) 

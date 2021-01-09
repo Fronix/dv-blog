@@ -8,7 +8,7 @@ import getMonth from '../utils/date';
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 const Payments = () => {
-  const { data: payments, error, mutate } = useSWR('http://localhost:3001/users', fetcher)
+  const { data: payments, error, mutate } = useSWR('https://darthvader.fronix.se/api/payment/users', fetcher)
   
   const TABLE_HEADER = [
     "Jan", "Feb", "Mar",

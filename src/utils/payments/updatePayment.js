@@ -1,4 +1,4 @@
-const updatePayment = (id, data) => fetch(`http://localhost:3001/users/${id}`, {
+const updatePayment = (id, data) => fetch(`https://darthvader.fronix.se/api/payment/users/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json"
