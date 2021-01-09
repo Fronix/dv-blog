@@ -52,6 +52,7 @@ const handleCheckboxChange = async (event, userId, month) => {
   }
 
   return (
+    <div className="payments_wrap">
     <div className="st_wrap_table" data-table_id="0">
     <header className="st_table_header">
       <h2>Darthvader 2021 - {getMonth()}</h2>
@@ -67,6 +68,7 @@ const handleCheckboxChange = async (event, userId, month) => {
           <UserRow user={user} handleCheckboxChange={handleCheckboxChange} />
         ))}
     </div>
+  </div>
   </div>
   )
 }

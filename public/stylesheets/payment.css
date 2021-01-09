@@ -3,7 +3,7 @@
   padding: 0;
   box-sizing: border-box;
 }
-body {
+.payments_wrap {
   background-color: rgb(63, 72, 83);
   font-family: sans-serif;
   color: rgb(220, 220, 220);
