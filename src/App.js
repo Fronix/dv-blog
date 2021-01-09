@@ -11,9 +11,8 @@ import Preview from './Preview'
 const App = () => (
   <BrowserRouter>
     <Switch>
-      {/* <Redirect exact from='/blog/' to='/' /> */}
       <Route exact path='/blog/payments' component={Payments} />
-      {/* <Route exact path='/' component={BlogHome} /> */}
+      <Route exact path='/blog' component={BlogHome} />
       <Route exact path='/preview' component={Preview} />
       <Route exact path='/blog/:uid' component={Post} />
       <Route component={NotFound} />
