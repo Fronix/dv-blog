@@ -1,14 +1,16 @@
 import React, {useState} from 'react'
-import { Loader } from '../components';
+import { AddUserPayment, DeleteIcon, Loader } from '../components';
 import Checkbox from '../components/Checkbox';
-import { updatePayment, useGetAllPayments } from '../utils/payments';
+import { updatePayment, paymentApiUrl, addPaymentUser, deletePaymentUser } from '../utils/payments';
 import useSWR, { mutate } from 'swr';
 import getMonth from '../utils/date';
+import { generateUser } from '../utils/payments/addPaymentUser';
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
-
+//.map(x => x.id).reduce((m, c) => c > m ? c : m)
 const Payments = () => {
-  const { data: payments, error, mutate } = useSWR('https://darthvader.fronix.se/payment-api/users', fetcher)
+  const [showAddUser, setShowAddUser] = useState(false);
+  const { data: payments, error, mutate } = useSWR(`${paymentApiUrl}/users`, fetcher)
   
   const TABLE_HEADER = [
     "Jan", "Feb", "Mar",
@@ -16,6 +18,25 @@ const Payments = () => {
     "Jul", "Aug", "Sep",
     "Oct", "Nov", "Dec"
 ]
+
+const toggleShowAddUser = () => setShowAddUser(!showAddUser);
+
+const addUser = async (name) => {
+  const newId = payments.map(x => x.id).reduce((m, c) => c > m ? c : m) + 1;
+  const newUser = generateUser(newId, name);
+  const updatedPayments = [...payments, newUser];
+  await addPaymentUser(newUser);
+  mutate(updatedPayments) //Update local SWR copy of payments for an "instant change" feel
+  toggleShowAddUser();
+}
+
+const deleteUser = async (id) => {
+  let updatedPayments = [...payments];
+  updatedPayments.filter(p => p.id !== id);
+
+  await deletePaymentUser(id);
+  mutate(updatedPayments) //Update local SWR copy of payments for an "instant change" feel
+}
 
 const handleCheckboxChange = async (event, userId, month) => {
   let updatedPayments = [...payments];
@@ -65,21 +86,26 @@ const handleCheckboxChange = async (event, userId, month) => {
     </header>
     <div className="st_table">
         {payments.map((user, id) => (
-          <UserRow user={user} handleCheckboxChange={handleCheckboxChange} />
+          <UserRow key={`${user.name}-${id}`} user={user} handleCheckboxChange={handleCheckboxChange} deleteUser={deleteUser} />
         ))}
     </div>
   </div>
+  <button onClick={toggleShowAddUser}>Add user</button>
+  {showAddUser && (
+    <AddUserPayment addUser={addUser} togglePopup={toggleShowAddUser} />
+  )}
   </div>
   )
 }
 
-const UserRow = ({user, handleCheckboxChange}) => {
+const UserRow = ({user, handleCheckboxChange, deleteUser}) => {
   return (
     <div key={`${user.name}-${user.id}`} className="st_row">
       <div key={user.name} className="st_column _tableNames">{user.name}</div>
       {user.payments.map((p) => (
-        <UserPaymentCheckbox userId={user.id} paid={p.paid} month={p.month} onChange={handleCheckboxChange} />
+        <UserPaymentCheckbox key={`${user.name}-${user.id}-${p.month}`} userId={user.id} paid={p.paid} month={p.month} onChange={handleCheckboxChange} />
       ))}
+      <div className="st_column _checkboxes"><div onClick={() => deleteUser(user.id)}><DeleteIcon /></div></div>
   </div>
   )
 }
@@ -87,11 +113,11 @@ const UserRow = ({user, handleCheckboxChange}) => {
 const UserPaymentCheckbox = ({userId, paid, month, onChange}) => {
 
   return (
-    <div key={`${userId}`} className="st_column _checkboxes">
-    <Checkbox
-      checked={paid}
-      onChange={(ev) => onChange(ev, userId, month)}
-    />
+    <div key={`${userId}-${month}`} className="st_column _checkboxes">
+      <Checkbox
+        checked={paid}
+        onChange={(ev) => onChange(ev, userId, month)}
+      />
   </div>
   )
 }

@@ -2,10 +2,10 @@
   -webkit-font-smoothing: antialiased;
 }
 ::selection {
-  background: #FFF7C7; /* WebKit/Blink Browsers */
+  background: #fff7c7; /* WebKit/Blink Browsers */
 }
 ::-moz-selection {
-  background: #FFF7C7; /* Gecko Browsers */
+  background: #fff7c7; /* Gecko Browsers */
 }
 
 /*
@@ -16,27 +16,38 @@ body {
   background-color: #1b1a1a;
   color: #f1f1f1;
   line-height: 1.5;
-  font-family: 'PT Serif', serif;
+  font-family: "PT Serif", serif;
   font-size: 20px;
 }
 a {
-    color: #f1f1f1;
+  color: #f1f1f1;
   text-decoration: none;
   background-repeat: repeat-x;
   background-size: 2px 2px;
   background-position: 0 23px;
 }
-.blog-main h1, .blog-main .h1,
-.blog-main h2, .blog-main .h2,
-.blog-main h3, .blog-main .h3,
-.blog-main h4, .blog-main .h4,
-.blog-main h5, .blog-main .h5,
-.blog-main h6, .blog-main .h6 {
-    color: #f1f1f1;
+.blog-main h1,
+.blog-main .h1,
+.blog-main h2,
+.blog-main .h2,
+.blog-main h3,
+.blog-main .h3,
+.blog-main h4,
+.blog-main .h4,
+.blog-main h5,
+.blog-main .h5,
+.blog-main h6,
+.blog-main .h6 {
+  color: #f1f1f1;
   text-align: left;
 }
-h1, h2,h3,h4,h5,h6 {
-  font-family: 'Lato', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lato", sans-serif;
 }
 h1 {
   margin-bottom: 1rem;
@@ -58,7 +69,8 @@ h3 {
 p {
   margin-bottom: 2rem;
 }
-pre, ul {
+pre,
+ul {
   margin-bottom: 20px;
 }
 strong {
