@@ -1,7 +1,7 @@
 import { paymentApiUrl } from '.'
 
 const updatePayment = (id, data) => fetch(`${paymentApiUrl}/users/${id}`, {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json"
     },

@@ -2,16 +2,18 @@ import React, {useState} from 'react'
 import { AddUserPayment, DeleteIcon, Loader } from '../components';
 import Checkbox from '../components/Checkbox';
 import { updatePayment, paymentApiUrl, addPaymentUser, deletePaymentUser } from '../utils/payments';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import getMonth from '../utils/date';
 import { generateUser } from '../utils/payments/addPaymentUser';
+import PauseIcon from '../components/PauseIcon';
+import PlayIcon from '../components/PlayIcon';
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
-//.map(x => x.id).reduce((m, c) => c > m ? c : m)
+
 const Payments = () => {
   const [showAddUser, setShowAddUser] = useState(false);
   const { data: payments, error, mutate } = useSWR(`${paymentApiUrl}/users`, fetcher)
-  
+
   const TABLE_HEADER = [
     "Jan", "Feb", "Mar",
     "Apr", "May", "Jun",
@@ -38,6 +40,22 @@ const deleteUser = async (id) => {
   mutate(updatedPayments) //Update local SWR copy of payments for an "instant change" feel
 }
 
+const pauseUser = async (id) => {
+  let updatedPayments = [...payments];
+
+  const user = payments.find(u => u.id === id);
+  const updatedUser = {
+    ...user,
+    paused: !user.paused
+  }
+  await updatePayment(id, updatedUser);
+
+  const userIndex = payments.findIndex(p => p.id === id);
+  updatedPayments[userIndex] = {...updatedUser};
+
+  mutate(updatedPayments);
+}
+
 const handleCheckboxChange = async (event, userId, month) => {
   let updatedPayments = [...payments];
   const user = payments.find(u => u.id === userId);
@@ -45,7 +63,7 @@ const handleCheckboxChange = async (event, userId, month) => {
 
   let updatedUserPayments = [...currentUserPayments];
   const monthIndex = updatedUserPayments.findIndex(p => p.month === month);
-  updatedUserPayments[monthIndex] = {...updatedUserPayments[monthIndex], paid: !updatedUserPayments[monthIndex].paid}
+  updatedUserPayments[monthIndex] = {...updatedUserPayments[monthIndex], paid: event.target.value}
   
   const updatedUser = {
     ...user,
@@ -58,6 +76,7 @@ const handleCheckboxChange = async (event, userId, month) => {
 
   mutate(updatedPayments) //Update local SWR copy of payments for an "instant change" feel
 }
+
   
   if(error) {
     return (
@@ -78,7 +97,7 @@ const handleCheckboxChange = async (event, userId, month) => {
     <header className="st_table_header">
       <h2>Darthvader 2021 - {getMonth()}</h2>
       <div className="st_row">
-        <div className="st_column _months">Name</div>
+        <div className="st_column _names">Name</div>
         {TABLE_HEADER.map(m => (
           <div key={m} className={`st_column _months ${m === getMonth().substr(0,3) ? 'warning' : ''}`}>{m}</div>
         ))}
@@ -86,7 +105,7 @@ const handleCheckboxChange = async (event, userId, month) => {
     </header>
     <div className="st_table">
         {payments.map((user, id) => (
-          <UserRow key={`${user.name}-${id}`} user={user} handleCheckboxChange={handleCheckboxChange} deleteUser={deleteUser} />
+          <UserRow key={`${user.name}-${id}`} user={user} handleCheckboxChange={handleCheckboxChange} deleteUser={deleteUser} pauseUser={pauseUser}/>
         ))}
     </div>
   </div>
@@ -98,14 +117,22 @@ const handleCheckboxChange = async (event, userId, month) => {
   )
 }
 
-const UserRow = ({user, handleCheckboxChange, deleteUser}) => {
+const UserRow = ({user, handleCheckboxChange, deleteUser, pauseUser}) => {
   return (
-    <div key={`${user.name}-${user.id}`} className="st_row">
-      <div key={user.name} className="st_column _tableNames">{user.name}</div>
+    <div key={`${user.name}-${user.id}`} className={`st_row`}>
+      <div key={user.name} className={`st_column _tableNames  ${user.paused ? 'paused' : ''}`}>{user.paused && <PauseIcon />} {user.name}</div>
       {user.payments.map((p) => (
         <UserPaymentCheckbox key={`${user.name}-${user.id}-${p.month}`} userId={user.id} paid={p.paid} month={p.month} onChange={handleCheckboxChange} />
       ))}
-      <div className="st_column _checkboxes"><div onClick={() => deleteUser(user.id)}><DeleteIcon /></div></div>
+      <div className="st_column _actions">
+        <div style={{ paddingRight: '15px'}} onClick={() => deleteUser(user.id)}>
+          <DeleteIcon />
+        </div>
+        <div onClick={() => pauseUser(user.id)}>
+          {user.paused && <PauseIcon size='26px' />}
+          {!user.paused && <PlayIcon size='26px' />}
+        </div>
+      </div>
   </div>
   )
 }
@@ -114,10 +141,7 @@ const UserPaymentCheckbox = ({userId, paid, month, onChange}) => {
 
   return (
     <div key={`${userId}-${month}`} className="st_column _checkboxes">
-      <Checkbox
-        checked={paid}
-        onChange={(ev) => onChange(ev, userId, month)}
-      />
+      <Checkbox value={paid} onChange={(ev) => onChange(ev, userId, month)} />
   </div>
   )
 }

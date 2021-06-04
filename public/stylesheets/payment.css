@@ -46,13 +46,16 @@ p {
 }
 
 ._tableNames {
-  max-width: 107px;
-  min-width: 107px;
+  min-width: 140px;
+  max-width: 180px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 
+._names {
+  min-width: 134px;
+}
 ._months {
   min-width: 80px;
 }
@@ -113,6 +116,11 @@ pre {
   display: flex;
   margin: 0;
 }
+
+.paused {
+  color: #d41717;
+}
+
 .st_table .st_row:nth-child(even) {
   background-color: rgba(0, 0, 0, 0.1);
 }
@@ -182,4 +190,49 @@ input[type="checkbox"]:checked::before {
 input[type="checkbox"]:checked ~ label::before {
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.threeStateCheckbox {
+  background-color: #fff;
+  border: solid 1px #d7d7d7;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  height: 1.6em;
+  margin-right: 1rem;
+  text-align: center;
+  width: 1.6em;
+  vertical-align: middle;
+}
+.threeStateCheckbox svg {
+  margin-bottom: 1px;
+  margin-top: 2px;
+  stroke: #fff;
+}
+
+.threeStateCheckbox.unpaid svg {
+  margin-right: 2px;
+}
+
+.paid {
+  background-color: #4aca65;
+  border-color: #43b45b;
+}
+
+.unpaid {
+  background-color: #dc4e4e;
+  border-color: #c74545;
+}
+
+.pauseicon {
+  font-size: 10px;
+}
+
+._actions {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+._actions > div > svg {
+  cursor: pointer;
 }
