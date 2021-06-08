@@ -1,19 +1,20 @@
-const getMonth = () => {
-    const d = new Date();
-    let month = new Array();
-    month[0] = "January";
-    month[1] = "February";
-    month[2] = "March";
-    month[3] = "April";
-    month[4] = "May";
-    month[5] = "June";
-    month[6] = "July";
-    month[7] = "August";
-    month[8] = "September";
-    month[9] = "October";
-    month[10] = "November";
-    month[11] = "December";
-    return month[d.getMonth()];
-}
+const dateInPast = function(firstDate, secondDate) {
+    if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {
+      return true;
+    }
+  
+    return false;
+  };
 
-export default getMonth;
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+
+const twelve = [...Array(12)]
+const createMonthDates = () => twelve.map((x, i) => {
+    const date = new Date(new Date().setMonth(i));
+    return { date, name: monthNames[date.getMonth()].substr(0,3)}
+})
+
+export { createMonthDates, dateInPast }

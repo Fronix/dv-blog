@@ -115,6 +115,7 @@ pre {
   display: -ms-flexbox;
   display: flex;
   margin: 0;
+  border-bottom: 1px solid #c5c5c5;
 }
 
 .paused {
@@ -235,4 +236,9 @@ input[type="checkbox"]:checked ~ label::before {
 
 ._actions > div > svg {
   cursor: pointer;
+}
+
+.disabled button {
+  background: grey;
+  border: 1px solid grey;
 }

@@ -5,7 +5,7 @@ const paidEnums = {
   2: 'unpaid',
 }
 
-const Checkbox = ({value, onChange}) => {
+const Checkbox = ({value, onChange, disabled}) => {
   const onClick = (e) => {
     e.preventDefault();
     if(value === 2) {
@@ -18,15 +18,15 @@ const Checkbox = ({value, onChange}) => {
   }
 
   return (
-    <button onClick={onClick} className={`threeStateCheckbox ${paidEnums[value]}`}>
-    {value === 1 && (
-      <Positive />
-    )}
-    {value === 2 && (
-      <Negative />
-    )}
+    <button disabled={disabled} onClick={onClick} className={`threeStateCheckbox ${paidEnums[value]}`}>
+      {value === 1 && (
+        <Positive />
+      )}
+      {value === 2 && (
+        <Negative />
+      )}
     </button>
-  );
+  )
 };
 
 const Positive = () => (

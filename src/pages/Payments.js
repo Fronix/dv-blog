@@ -3,7 +3,7 @@ import { AddUserPayment, DeleteIcon, Loader } from '../components';
 import Checkbox from '../components/Checkbox';
 import { updatePayment, paymentApiUrl, addPaymentUser, deletePaymentUser } from '../utils/payments';
 import useSWR from 'swr';
-import getMonth from '../utils/date';
+import { createMonthDates, dateInPast } from '../utils/date';
 import { generateUser } from '../utils/payments/addPaymentUser';
 import PauseIcon from '../components/PauseIcon';
 import PlayIcon from '../components/PlayIcon';
@@ -91,22 +91,33 @@ const handleCheckboxChange = async (event, userId, month) => {
     return <Loader />
   }
 
+  const sortedPayments = payments.sort((a, b) => {
+    return Number(a.paused) - Number(b.paused)
+  });
+
+  const today = new Date();
+  const months = createMonthDates();
   return (
     <div className="payments_wrap">
     <div className="st_wrap_table" data-table_id="0">
     <header className="st_table_header">
-      <h2>Darthvader 2021 - {getMonth()}</h2>
+      <h2>Darthvader 2021 - {months.find(m => m.date.getMonth() === today.getMonth()).name}</h2>
       <div className="st_row">
         <div className="st_column _names">Name</div>
-        {TABLE_HEADER.map(m => (
-          <div key={m} className={`st_column _months ${m === getMonth().substr(0,3) ? 'warning' : ''}`}>{m}</div>
-        ))}
+        {months.map(m => {
+          const isToday = m.date.getMonth() === today.getMonth();
+          return (
+            <div key={m.name} className={`st_column _months ${isToday ? 'warning' : ''}`}>
+              {m.name}
+            </div>
+          )
+        })}
       </div>
     </header>
     <div className="st_table">
-        {payments.map((user, id) => (
-          <UserRow key={`${user.name}-${id}`} user={user} handleCheckboxChange={handleCheckboxChange} deleteUser={deleteUser} pauseUser={pauseUser}/>
-        ))}
+        {sortedPayments.map((user, id) => {
+          return <UserRow key={`${user.name}-${id}`} user={user} handleCheckboxChange={handleCheckboxChange} deleteUser={deleteUser} pauseUser={pauseUser}/>
+        })}
     </div>
   </div>
   <button onClick={toggleShowAddUser}>Add user</button>
@@ -118,30 +129,37 @@ const handleCheckboxChange = async (event, userId, month) => {
 }
 
 const UserRow = ({user, handleCheckboxChange, deleteUser, pauseUser}) => {
+  const today = new Date();
   return (
     <div key={`${user.name}-${user.id}`} className={`st_row`}>
       <div key={user.name} className={`st_column _tableNames  ${user.paused ? 'paused' : ''}`}>{user.paused && <PauseIcon />} {user.name}</div>
-      {user.payments.map((p) => (
-        <UserPaymentCheckbox key={`${user.name}-${user.id}-${p.month}`} userId={user.id} paid={p.paid} month={p.month} onChange={handleCheckboxChange} />
-      ))}
+      {user.payments.map((p) => <UserPaymentCheckbox disabled={user.paused} key={`${user.name}-${user.id}-${p.month}`} userId={user.id} paid={p.paid} month={p.month} date={p.date} onChange={handleCheckboxChange} />)}
       <div className="st_column _actions">
         <div style={{ paddingRight: '15px'}} onClick={() => deleteUser(user.id)}>
           <DeleteIcon />
         </div>
         <div onClick={() => pauseUser(user.id)}>
-          {user.paused && <PauseIcon size='26px' />}
-          {!user.paused && <PlayIcon size='26px' />}
+          {!user.paused && <PauseIcon size='26px' />}
+          {user.paused && <PlayIcon size='26px' />}
         </div>
       </div>
   </div>
   )
 }
 
-const UserPaymentCheckbox = ({userId, paid, month, onChange}) => {
+const UserPaymentCheckbox = ({userId, paid, month, date, onChange, disabled}) => {
+  const today = new Date();
+  const isPast = !dateInPast(today, new Date(date));
+  
+  const disableClick = disabled || isPast
 
   return (
-    <div key={`${userId}-${month}`} className="st_column _checkboxes">
-      <Checkbox value={Number(paid)} onChange={(ev) => onChange(ev, userId, month)} />
+    <div key={`${userId}-${month}`} className={`st_column _checkboxes ${disableClick && 'disabled'}`}>
+      <Checkbox 
+        disabled={disabled}
+        value={Number(paid)}
+        onChange={(ev) => onChange(ev, userId, month)}
+      />
   </div>
   )
 }
