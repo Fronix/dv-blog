@@ -63,7 +63,7 @@ const handleCheckboxChange = async (event, userId, month) => {
 
   let updatedUserPayments = [...currentUserPayments];
   const monthIndex = updatedUserPayments.findIndex(p => p.month === month);
-  updatedUserPayments[monthIndex] = {...updatedUserPayments[monthIndex], paid: event.target.value}
+  updatedUserPayments[monthIndex] = {...updatedUserPayments[monthIndex], paid: Number(event.target.value)}
   
   const updatedUser = {
     ...user,
@@ -141,7 +141,7 @@ const UserPaymentCheckbox = ({userId, paid, month, onChange}) => {
 
   return (
     <div key={`${userId}-${month}`} className="st_column _checkboxes">
-      <Checkbox value={paid} onChange={(ev) => onChange(ev, userId, month)} />
+      <Checkbox value={Number(paid)} onChange={(ev) => onChange(ev, userId, month)} />
   </div>
   )
 }
