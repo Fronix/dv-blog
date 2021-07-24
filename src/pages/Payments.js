@@ -1,27 +1,34 @@
-import React, {useState} from 'react'
-import { AddUserPayment, DeleteIcon, Loader } from '../components';
+import React, {useCallback, useState} from 'react'
+import { AddUserPayment, DeleteIcon, Loader, UpdatePrice } from '../components';
 import Checkbox from '../components/Checkbox';
-import { updatePayment, paymentApiUrl, addPaymentUser, deletePaymentUser } from '../utils/payments';
+import { updatePayment, paymentApiUrl, addPaymentUser, deletePaymentUser, updatePrice as apiUpdatePrice } from '../utils/payments';
 import useSWR from 'swr';
 import { createMonthDates, dateInPast } from '../utils/date';
 import { generateUser } from '../utils/payments/addPaymentUser';
 import PauseIcon from '../components/PauseIcon';
 import PlayIcon from '../components/PlayIcon';
+import { currencyApiUrl } from '../utils/payments/currencyRate';
+
+
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 const Payments = () => {
   const [showAddUser, setShowAddUser] = useState(false);
+  const [showUpdatePrice, setShowUpdatePrice] = useState(false);
   const { data: payments, error, mutate } = useSWR(`${paymentApiUrl}/users`, fetcher)
+  const { data: price, error: priceError, mutate: priceMutate } = useSWR(`${paymentApiUrl}/price`, fetcher)
+  const { data: rate, error: rateError } = useSWR(currencyApiUrl, fetcher)
 
   const TABLE_HEADER = [
     "Jan", "Feb", "Mar",
     "Apr", "May", "Jun",
     "Jul", "Aug", "Sep",
     "Oct", "Nov", "Dec"
-]
+  ];
 
 const toggleShowAddUser = () => setShowAddUser(!showAddUser);
+const toggleShowUpdatePrice = () => setShowUpdatePrice(!showUpdatePrice);
 
 const addUser = async (name) => {
   const newId = payments.map(x => x.id).reduce((m, c) => c > m ? c : m) + 1;
@@ -30,6 +37,18 @@ const addUser = async (name) => {
   await addPaymentUser(newUser);
   mutate(updatedPayments) //Update local SWR copy of payments for an "instant change" feel
   toggleShowAddUser();
+}
+
+const updatePrice = async (newPrices) => {
+  const newData = {
+    ...price,
+    ...newPrices
+  }
+
+  console.log('newData:', newData)
+  await apiUpdatePrice(newData)
+  priceMutate(newData);
+  toggleShowUpdatePrice();
 }
 
 const deleteUser = async (id) => {
@@ -77,31 +96,51 @@ const handleCheckboxChange = async (event, userId, month) => {
   mutate(updatedPayments) //Update local SWR copy of payments for an "instant change" feel
 }
 
-  
-  if(error) {
-    return (
-      <div>
+const getMonthlyTotal = useCallback(
+  () => {
+    const { currPricePer } = price;
+    const activeUsers = payments.filter(x => !x.paused).length;
+
+    return currPricePer * activeUsers;
+  },
+  [payments, price],
+);
+
+if(error || priceError) {
+  return (
+    <div>
         <h1>Error fetching payments</h1>
         <p>{JSON.stringify(error)}</p>
       </div>
     )
   }
- 
-  if(!payments) {
+  
+  if(!payments || !price) {
     return <Loader />
   }
-
+  
   const sortedPayments = payments.sort((a, b) => {
     return Number(a.paused) - Number(b.paused)
   });
-
+  
   const today = new Date();
   const months = createMonthDates();
+  const convertedPrice = rate ? Math.floor(price.totalPriceUsd * rate.conversion_rate) : 0;
   return (
     <div className="payments_wrap">
+      {!!rateError && (<div>Error getting USD/SEK conversion rate</div>)}
     <div className="st_wrap_table" data-table_id="0">
     <header className="st_table_header">
-      <h2>Darthvader 2021 - {months.find(m => m.date.getMonth() === today.getMonth()).name}</h2>
+      <div className='payment_header_flex'>
+        <div className='payment_header_flex_item'>
+          <h2>Darthvader 2021 - {months.find(m => m.date.getMonth() === today.getMonth()).name}</h2>
+        </div>
+        <div className='payment_header_flex_item align_right curr_price'>
+          <span>Current price: {price.currPricePer ?? ''}kr</span>
+          <span>Total: {getMonthlyTotal()}kr / {convertedPrice}kr</span>
+          <span>Diff: {convertedPrice - getMonthlyTotal()}kr</span>
+        </div>
+      </div>
       <div className="st_row">
         <div className="st_column _names">Name</div>
         {months.map(m => {
@@ -121,8 +160,12 @@ const handleCheckboxChange = async (event, userId, month) => {
     </div>
   </div>
   <button onClick={toggleShowAddUser}>Add user</button>
+  <button onClick={toggleShowUpdatePrice}>Update price</button>
   {showAddUser && (
     <AddUserPayment addUser={addUser} togglePopup={toggleShowAddUser} />
+  )}
+  {showUpdatePrice && (
+    <UpdatePrice updatePrice={updatePrice} togglePopup={toggleShowUpdatePrice} />
   )}
   </div>
   )

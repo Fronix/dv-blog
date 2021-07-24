@@ -9,7 +9,7 @@ const AddUserPayment = ({ addUser, togglePopup }) => {
             <div className='popup_inner'>
                 <h3>Add user</h3>
                 <label htmlFor="name">Name:</label>
-                <input type='text' name='name' id='name' onChange={onChange} /> <br />
+                <input autoFocus type='text' name='name' id='name' onChange={onChange} /> <br />
             <button onClick={() => addUser(name)} disabled={!name}>Save</button>
             <button onClick={togglePopup}>Close</button>
             </div>

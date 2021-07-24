@@ -242,3 +242,25 @@ input[type="checkbox"]:checked ~ label::before {
   background: grey;
   border: 1px solid grey;
 }
+
+.payment_header_flex {
+  display: flex;
+  width: 100%;
+}
+
+.payment_header_flex_item {
+  flex: 1 auto;
+}
+
+.align_right {
+  text-align: right;
+}
+
+.curr_price {
+  margin: 0 20px;
+  padding: 20px 0 0;
+}
+
+.curr_price > span {
+  display: block;
+}
