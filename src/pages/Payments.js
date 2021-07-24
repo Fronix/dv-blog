@@ -136,7 +136,7 @@ if(error || priceError) {
           <h2>Darthvader 2021 - {months.find(m => m.date.getMonth() === today.getMonth()).name}</h2>
         </div>
         <div className='payment_header_flex_item align_right curr_price'>
-          <span>Current price: {price.currPricePer ?? ''}kr</span>
+          <span>Current price: {price.currPricePer || ''}kr</span>
           <span>Total: {getMonthlyTotal()}kr / {convertedPrice}kr</span>
           <span>Diff: {convertedPrice - getMonthlyTotal()}kr</span>
         </div>
