@@ -1,57 +1,70 @@
 import { paymentApiUrl } from ".";
 
 export const generateUser = (id, name) => {
+  const currYear = (new Date()).getFullYear();
     return {
         id,
         name,
         payments: [
           {
             month: "Jan",
-            paid: false
+            paid: 2,
+            date: `${currYear}-01-30T23:00:00.000Z`
           },
           {
             month: "Feb",
-            paid: false
+            paid: 2,
+            date: `${currYear}-02-27T23:00:00.000Z`
           },
           {
             month: "Mar",
-            paid: false
+            paid: 2,
+            date: `${currYear}-03-30T22:00:00.000Z`
           },
           {
             month: "Apr",
-            paid: false
+            paid: 2,
+            date: `${currYear}-04-29T22:00:00.000Z`
           },
           {
             month: "May",
-            paid: false
+            paid: 2,
+            date: `${currYear}-05-30T22:00:00.000Z`
           },
           {
             month: "Jun",
-            paid: false
+            paid: 2,
+            date: `${currYear}-06-29T22:00:00.000Z`
           },
           {
             month: "Jul",
-            paid: false
+            paid: 2,
+            date: `${currYear}-07-30T22:00:00.000Z`
           },
           {
             month: "Aug",
-            paid: false
+            paid: 2,
+            date: `${currYear}-08-30T22:00:00.000Z`
           },
           {
             month: "Sep",
-            paid: false
+            paid: 2,
+            date: `${currYear}-09-29T22:00:00.000Z`
           },
           {
             month: "Oct",
-            paid: false
+            paid: 2,
+            date: `${currYear}-10-30T22:00:00.000Z`
           },
           {
             month: "Nov",
-            paid: false
+            paid: 2,
+            date: `${currYear}-11-29T23:00:00.000Z`
           },
           {
             month: "Dec",
-            paid: false
+            paid: 2,
+            date: `${currYear}-12-30T23:00:00.000Z`
           }
         ]
       }
