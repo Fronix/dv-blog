@@ -5,6 +5,7 @@ export const generateUser = (id, name) => {
     return {
         id,
         name,
+        paused: false,
         payments: [
           {
             month: "Jan",
