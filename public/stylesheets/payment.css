@@ -29,10 +29,6 @@ p {
   background-color: rgb(38, 108, 189);
   color: white;
 }
-.st_viewport {
-  max-height: 500px;
-  overflow: auto;
-}
 
 [data-table_id="1"] {
   background-color: rgb(255, 115, 0);
@@ -43,14 +39,6 @@ p {
 }
 [data-table_id="3"] {
   background-color: rgba(168, 189, 4, 0.8);
-}
-
-._tableNames {
-  min-width: 140px;
-  max-width: 180px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 }
 
 ._names {
@@ -68,15 +56,6 @@ pre {
   overflow: auto;
 }
 
-/** Sticky table styles **/
-.st_viewport {
-  background-color: rgb(62, 148, 236);
-  color: rgb(27, 30, 36);
-  margin: 20px 0;
-}
-/* ###  Table wrap */
-.st_wrap_table {
-}
 /* ##   header */
 .st_table_header {
   position: -webkit-sticky;
@@ -85,49 +64,88 @@ pre {
   z-index: 1;
   background-color: rgb(27, 30, 36);
   color: rgb(220, 220, 220);
+  width: 74%;
 }
+
 .st_table_header h2 {
   font-weight: 400;
   margin: 0 20px;
   padding: 20px 0 0;
-}
-.st_table_header .st_row {
-  color: rgba(220, 220, 220, 0.7);
-}
-.st_table_header .st_column {
-}
-/* ##  table */
-.st_table {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-}
-/* #   row */
-.st_row {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  margin: 0;
-  border-bottom: 1px solid #c5c5c5;
 }
 
 .paused {
   color: #d41717;
 }
 
-.st_table .st_row:nth-child(even) {
-  background-color: rgba(0, 0, 0, 0.1);
+table {
+  white-space: nowrap;
+  margin: 0;
+  border: none;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  border: 1px solid black;
+  width: auto;
 }
-/* #   column */
-.st_column {
-  padding: 10px 20px;
+table td,
+table th {
+  border: 1px solid black;
+  padding: 0.5rem 1rem;
+}
+table thead th {
+  padding: 3px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 5vw;
+}
+table td {
+  padding: 4px 5px;
+  text-align: center;
+}
+
+table tbody th {
+  font-weight: 100;
+  font-style: italic;
+  text-align: left;
+  position: relative;
+}
+table thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 10vw;
+  background-color: rgb(27 30 36);
+}
+
+table tbody th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 10vw;
+  background-color: rgb(27 30 36);
+}
+
+table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+caption {
+  text-align: left;
+  padding: 0.25rem;
+  position: sticky;
+  left: 0;
+}
+
+[role="region"][aria-labelledby][tabindex] {
+  width: 100%;
+  max-height: 98vh;
+  overflow: auto;
+}
+[role="region"][aria-labelledby][tabindex]:focus {
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
+  outline: 0;
 }
 
 .popup {
@@ -200,11 +218,9 @@ input[type="checkbox"]:checked ~ label::before {
   cursor: pointer;
   display: inline-block;
   height: 1.6em;
-  margin-right: 1rem;
-  text-align: center;
   width: 1.6em;
-  vertical-align: middle;
 }
+
 .threeStateCheckbox svg {
   margin-bottom: 1px;
   margin-top: 2px;
